@@ -73,8 +73,4 @@ public class Order {
         return customer.getFullName();
     }
 
-    public Integer getItemAmount()
-
-
-
 }
