@@ -40,6 +40,14 @@ public class Item {
         return Objects.hash(name, price, type);
     }
 
+    @Override
+    public String toString() {
+        return "Название: " + name +
+                " Цена: " + price +
+                " Тип: " + type +
+                " Количество: " + amount;
+    }
+
     public String getName() {
         return name;
     }

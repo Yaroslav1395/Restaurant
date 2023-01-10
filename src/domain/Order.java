@@ -4,6 +4,7 @@ import util.NotImplementedException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Order {
     private final Customer customer;
@@ -31,6 +32,14 @@ public class Order {
         return Objects.hash(customer, homeDelivery);
     }
 
+    @Override
+    public String toString() {
+        return "Заказчик: " + customer +
+                "\nБлюда: " + listItemsToString() +
+                "\nДоставка: " + homeDelivery +
+                "\nСумма: " + total;
+    }
+
     public List<Item> getItems() {
         return items;
     }
@@ -54,4 +63,18 @@ public class Order {
     public void calculateTotal() {
         total = items.stream().mapToDouble(Item::totalCost).sum();
     }
+
+    private String listItemsToString(){
+        return items.stream()
+                .map(Item::toString)
+                .collect(Collectors.joining(", ", " ", ""));
+    }
+    public String getCustomerName(){
+        return customer.getFullName();
+    }
+
+    public Integer getItemAmount()
+
+
+
 }

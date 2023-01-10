@@ -8,19 +8,16 @@
 // вот так было до импорта Collectors.toList(), теперь стало просто toList()
 
 
+import UserInterface.UserInterface;
+
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
-        int n = new Scanner(System.in).nextInt();
-        // это для домашки
-        // выберите любое количество заказов, какое вам нравится.
-
-        //var orders = Orders.RestaurantOrders.read("orders_100.json").getOrders();
-        //var orders = Orders.RestaurantOrders.read("orders_1000.json").getOrders();
-        //var orders = Orders.RestaurantOrders.read("orders_10_000.json").getOrders();
-
-        // протестировать ваши методы вы можете как раз в этом файле (или в любом другом, в котором вам будет удобно)
+        UserInterface userInterface = new UserInterface();
     }
 }

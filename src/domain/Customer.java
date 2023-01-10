@@ -25,6 +25,12 @@ public class Customer {
         return Objects.hash(fullName, email);
     }
 
+    @Override
+    public String toString() {
+        return "Имя: " + fullName +
+                " Email: " + email;
+    }
+
     public String getFullName() {
         return fullName;
     }
