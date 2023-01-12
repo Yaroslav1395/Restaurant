@@ -72,5 +72,8 @@ public class Order {
     public String getCustomerName(){
         return customer.getFullName();
     }
+    public String getCustomerEmail(){
+        return customer.getEmail();
+    }
 
 }

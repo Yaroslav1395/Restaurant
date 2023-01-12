@@ -7,10 +7,7 @@ import domain.Order;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -70,7 +67,7 @@ public class RestaurantOrders {
         double middleProfit = delivery.stream().mapToDouble(Order::getTotal).sum() / delivery.size();
 
         Map<Boolean, List<Order>> mostAndLeast = delivery.stream()
-                .collect(Collectors.partitioningBy(order -> order.getTotal() >= middleProfit));
+                .collect(partitioningBy(order -> order.getTotal() >= middleProfit));
 
         System.out.println("-------------Самые прибыльные заказы-------------");
         mostAndLeast.get(Boolean.TRUE).stream()
@@ -85,11 +82,16 @@ public class RestaurantOrders {
                 .forEach(System.out::println);
     }
 
-    public static void printOrdersWithoutMaxAndMinOrderTotal(){
+    public static void printOrdersWithSkip(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите от какой суммы");
+        int minSum = scanner.nextInt();
+        System.out.println("Введите до какой суммы");
+        int maxSum = scanner.nextInt();
         orders.stream()
                 .sorted(comparing(Order::getTotal))
-                .skip(1)
-                .limit(orders.size() - 2)
+                .takeWhile(order -> order.getTotal() >= minSum)
+                .dropWhile(order -> order.getTotal() > maxSum)
                 .forEach(System.out::println);
     }
 
@@ -101,7 +103,7 @@ public class RestaurantOrders {
     public static void listOfAllCustomerEmail(){
         orders.stream()
                 .map(order -> order.getCustomer().getEmail())
-                .collect(Collectors.toCollection(TreeSet::new))
+                .collect(toCollection(TreeSet::new))
                 .forEach(System.out::println);
     }
 
@@ -148,7 +150,41 @@ public class RestaurantOrders {
 
     }
     public static void groupingGoodsByNumberOfSales(){
+        List<Item> allItemsInOrders = orders.stream().flatMap(order -> order.getItems().stream()).toList();
 
+        Map<String, List<Integer>> itemListAmount = allItemsInOrders.stream()
+                .collect(groupingBy(Item::getName, mapping(Item::getAmount, toList())));
+
+        Map<String, Integer> itemAmount = new HashMap<>();
+
+        for (var entry: itemListAmount.entrySet()) {
+            int sumAmount = entry.getValue().stream().mapToInt(Integer::intValue).sum();
+            itemAmount.put(entry.getKey(), sumAmount);
+        }
+
+        itemAmount.forEach((k,v) -> {
+            System.out.print(k + "-");
+            System.out.println(v);
+        });
     }
 
+    public static void groupingGoodsByEmail(){
+        Map<String, List<String>> itemEmail = new HashMap<>();
+
+        Map<String, List<Set<String>>> emailListsItems= orders.stream()
+                .collect(groupingBy(Order::getCustomerEmail, mapping(order -> order.getItems().stream()
+                                .map(Item::getName)
+                                .collect(toSet()), toList()))
+                );
+
+        for (var entry: emailListsItems.entrySet()) {
+            List<String> items = entry.getValue().stream().collect(ArrayList::new, List::addAll, List::addAll);
+            itemEmail.put(entry.getKey(), items);
+        }
+
+        itemEmail.forEach((k,v) -> {
+            System.out.println(k + " -> ");
+            v.forEach(System.out::println);
+        });
+    }
 }
